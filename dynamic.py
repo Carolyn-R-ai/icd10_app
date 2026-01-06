@@ -11,7 +11,7 @@ Original file is located at
 import pandas as pd
 from rapidfuzz import process, fuzz
 
-df = pd.read_excel(r"C:\Users\Hp\Downloads\Diagnoses.xlsx")
+df = pd.read_excel("Diagnoses.xlsx")
 
 import re
 
