@@ -24,22 +24,24 @@ User Input: "{user_input}"
 Output format:
 ICD-10 Code - Official Name
 """
-      try:
-            response = client.chat.completions.create(
-                model="gpt-4.1-mini",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0
-            )
-            answer = response.choices[0].message.content.strip()
-           
-            if not answer or "not found" in answer.lower():
-                return "Not Found"
-            return answer
-        except Exception as e:
-            return f"Connection error: {e}"  
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0
+        )
+        answer = response.choices[0].message.content.strip()
 
-if user_input:
-    result = get_icd10_cancer(user_input)
-    st.success(f" Result: {result}")
+        if not answer or "not found" in answer.lower():
+            return "Not Found"
+        return answer
 
+    except Exception as e:
+        return f"Connection error: {e}"
 
+if st.button("Submit"):
+    if user_input.strip():
+        result = get_icd10_cancer(user_input)
+        st.success(f"Result: {result}")
+    else:
+        st.info("Please enter a diagnosis")
