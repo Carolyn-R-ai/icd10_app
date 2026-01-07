@@ -53,7 +53,7 @@ def map_input(text, df, threshold=90):
     if not row.empty:
         return row['MappingFieldValue'].iloc[0], row['ICD10 Code'].iloc[0], 100
 
-     for col in ['Source', 'MappingFieldValue']:
+    for col in ['Source', 'MappingFieldValue']:
         for idx, val in df[col].dropna().items():   # <- changed here
             val_tokens = set(val.lower().split())
             if text_tokens <= val_tokens:
