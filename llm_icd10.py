@@ -33,8 +33,6 @@ ICD-10 Code - Official Name
         )
     except Exception as e:
         st.error(f"Connection error: {e}")
-        )
-        
    
     answer = response.choices[0].message.content.strip()
     return answer
@@ -43,6 +41,7 @@ if user_input:
     result = get_icd10_cancer(user_input)
 
     st.success(f" Result: {result}")
+
 
 
 
