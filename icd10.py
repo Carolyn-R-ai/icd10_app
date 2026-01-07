@@ -55,7 +55,7 @@ def map_input(text, df, threshold=90):
     for col in ['Source', 'MappingFieldValue']:
         choices = df[col].tolist()
         match = process.extractOne(text, choices, scorer=fuzz.token_sort_ratio)
-            if match and match[1] >= threshold:
+        if match and match[1] >= threshold:
             row = df[df[col] == match[0]].iloc[0]
             return row['MappingFieldValue'], row['ICD10 Code'], match[1]
 
