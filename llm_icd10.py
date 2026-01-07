@@ -1,5 +1,6 @@
 from openai import OpenAI
 import streamlit as st
+import os
 
 st.set_page_config(
     page_title="ICD-10 App Matcher",
@@ -35,4 +36,5 @@ ICD-10 Code - Official Name
 
 if user_input:
     result = get_icd10_cancer(user_input)
+
     st.success(f" Result: {result}")
