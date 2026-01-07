@@ -99,7 +99,6 @@ if st.button("Enter"):
         result = predict_icd10_llm_assisted(user_input)
 
         if result["ICD10 Code"]:
-            st.success("Match Found")
             st.write("**Input:**", result["Input"])
             st.write("**Mapping Field Value:**", result["MappingFieldValue"])
             st.write("**ICD-10 Code:**", result["ICD10 Code"])
