@@ -54,12 +54,11 @@ def map_input(text, df, threshold=90):
         return row['MappingFieldValue'].iloc[0], row['ICD10 Code'].iloc[0], 100
 
     for col in ['Source', 'MappingFieldValue']:
-        for idx, val in df[col].dropna().items():   # <- changed here
+        for idx, val in df[col].dropna().items():  
             val_tokens = set(val.lower().split())
             if text_tokens <= val_tokens:
                 return df.loc[idx, 'MappingFieldValue'], df.loc[idx, 'ICD10 Code'], 100
 
-    return None, None, 0
     return None, None, 0
 
 def predict_icd10_llm_assisted(text):
@@ -81,21 +80,15 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": None
         }
 
-    if len(text_clean.split()) > 1:  
-        normalized = normalize_diagnosis_llm(text)
-        mapping_value, icd_code, confidence = map_input_strict(normalized, df)
-        return {"Input": text, 
-        "MappingFieldValue": mapping_value, 
-        "ICD10 Code": icd_code
-        }
-        
     normalized = normalize_diagnosis_llm(text)
     mapping_value, icd_code, confidence = map_input(normalized, df)
+
     return {
         "Input": text,
         "MappingFieldValue": mapping_value,
         "ICD10 Code": icd_code
     }
+
 
 
 user_input = st.text_input("Enter a Diagnosis")
