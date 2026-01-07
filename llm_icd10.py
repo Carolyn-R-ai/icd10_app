@@ -37,5 +37,8 @@ ICD-10 Code - Official Name
 if user_input:
     result = get_icd10_cancer(user_input)
     st.success(f" Result: {result}")
+else:
+    st.info("Not Found")
+
 
 
