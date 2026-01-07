@@ -18,7 +18,7 @@ df['Source'] = df['Source'].astype(str).str.strip()
 df['MappingFieldValue'] = df['MappingFieldValue'].astype(str).str.strip()
 df['ICD10 Code'] = df['ICD10 Code'].astype(str).str.strip()
 
-client = OpenAI(api_key="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")  # replace with your key
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 def normalize_diagnosis_llm(text):
     choices = df['MappingFieldValue'].dropna().unique()
