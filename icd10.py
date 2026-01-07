@@ -55,8 +55,10 @@ def map_input(text, df, threshold=90):
     return None, None, 0
 
 def predict_icd10_llm_assisted(text):
-  
-    mapping_value, icd_code, confidence = map_input(text, df)
+
+    text_clean = re.sub(r'[^a-z0-9\s]', '', text.lower().strip())
+
+    mapping_value, icd_code, confidence = map_input(text_clean, df)
     if mapping_value is not None:
         return {
             "Input": text,
@@ -64,12 +66,19 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": icd_code
         }
 
-    if re.match(r'^c\d{1,2}$', text.lower()):
-        
+    if re.match(r'^c\d{1,2}$', text_clean):
         return {
             "Input": text,
             "MappingFieldValue": None,
             "ICD10 Code": None
+        }
+
+    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=70)
+    if mapping_value is not None:
+        return {
+            "Input": text,
+            "MappingFieldValue": mapping_value,
+            "ICD10 Code": icd_code
         }
 
     normalized = normalize_diagnosis_llm(text)
@@ -79,6 +88,7 @@ def predict_icd10_llm_assisted(text):
         "MappingFieldValue": mapping_value,
         "ICD10 Code": icd_code
     }
+
 
 user_input = st.text_input("Enter a Diagnosis")
 
