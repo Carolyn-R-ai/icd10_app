@@ -52,6 +52,13 @@ def map_input(text, df, threshold=90):
     if not row.empty:
         return row['MappingFieldValue'].iloc[0], row['ICD10 Code'].iloc[0], 100
 
+   for col in ['Source', 'MappingFieldValue']:
+        choices = df[col].tolist()
+        match = process.extractOne(text, choices, scorer=fuzz.token_sort_ratio)
+        if match and match[1] >= threshold:
+            row = df[df[col] == match[0]].iloc[0]
+            return row['MappingFieldValue'], row['ICD10 Code'], match[1]
+
     return None, None, 0
 
 def predict_icd10_llm_assisted(text):
@@ -73,13 +80,11 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": None
         }
 
-    threshold = 50 if len(text_clean) <= 5 else 70
-    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=threshold)
+    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=50)
     if mapping_value is not None:
         return {"Input": text, 
         "MappingFieldValue": mapping_value, 
-        "ICD10 Code": icd_code
-        }
+        "ICD10 Code": icd_code}
 
     normalized = normalize_diagnosis_llm(text)
     mapping_value, icd_code, confidence = map_input(normalized, df)
