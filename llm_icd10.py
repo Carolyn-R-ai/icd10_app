@@ -32,13 +32,12 @@ ICD-10 Code - Official Name
     
    
     answer = response.choices[0].message.content.strip()
-    return answer
+    if not answer or "not found" in answer.lower():
+            return "Not Found"
+        return answer
+    except Exception as e:
+        return f"Connection error: {e}"
 
 if user_input:
     result = get_icd10_cancer(user_input)
     st.success(f" Result: {result}")
-else:
-    st.info("Not Found")
-
-
-
