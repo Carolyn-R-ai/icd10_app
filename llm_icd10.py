@@ -11,7 +11,7 @@ st.title("ICD-10 App Matcher")
 
 user_input = st.text_input("Enter a Diagnosis")
 
-client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def get_icd10_cancer(user_input):
     prompt = f"""
@@ -39,4 +39,5 @@ if user_input:
     result = get_icd10_cancer(user_input)
 
     st.success(f" Result: {result}")
+
 
