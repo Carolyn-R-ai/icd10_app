@@ -73,6 +73,20 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": icd_code
         }
 
+    
+    if re.match(r'^c\d{2}$', text_clean):
+        all_codes = set()
+        for val in df['ICD10 Code'].dropna():
+            for c in val.split(','):
+                all_codes.add(c.strip().lower())
+
+        if text_clean not in all_codes:
+            return {
+                "Input": text,
+                "MappingFieldValue": None,
+                "ICD10 Code": None
+                    }
+
     if re.match(r'^c\d{2}$', text_clean):
         for _, row in df.iterrows():
             codes = [c.strip().lower() for c in row['ICD10 Code'].split(',')]
