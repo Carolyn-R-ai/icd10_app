@@ -39,6 +39,7 @@ def map_input(text, df, threshold=90):
 
     text_lower = text.lower().strip()
     text_lower = re.sub(r'[^a-z0-9\s]', '', text_lower)
+    text_tokens = set(text_lower.split())
 
     row = df[df['Source'].str.lower() == text_lower]
     if not row.empty:
@@ -51,14 +52,13 @@ def map_input(text, df, threshold=90):
     row = df[df['ICD10 Code'].str.lower() == text_lower]
     if not row.empty:
         return row['MappingFieldValue'].iloc[0], row['ICD10 Code'].iloc[0], 100
-        
-    for col in ['Source', 'MappingFieldValue']:
-        choices = df[col].tolist()
-        match = process.extractOne(text, choices, scorer=fuzz.token_sort_ratio)
-        if match and match[1] >= threshold:
-            row = df[df[col] == match[0]].iloc[0]
-            return row['MappingFieldValue'], row['ICD10 Code'], match[1]
 
+    for col in ['Source', 'MappingFieldValue']:
+        for idx, val in df[col].dropna().iteritems():
+            val_tokens = set(val.lower().split())
+            if text_tokens <= val_tokens:  # all input words exist in value
+                return df.loc[idx, 'MappingFieldValue'], df.loc[idx, 'ICD10 Code'], 100
+                
     return None, None, 0
 
 def predict_icd10_llm_assisted(text):
@@ -80,12 +80,14 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": None
         }
 
-    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=50)
-    if mapping_value is not None:
+    if len(text_clean.split()) > 1:  
+        normalized = normalize_diagnosis_llm(text)
+        mapping_value, icd_code, confidence = map_input_strict(normalized, df)
         return {"Input": text, 
         "MappingFieldValue": mapping_value, 
-        "ICD10 Code": icd_code}
-
+        "ICD10 Code": icd_code
+        }
+        
     normalized = normalize_diagnosis_llm(text)
     mapping_value, icd_code, confidence = map_input(normalized, df)
     return {
