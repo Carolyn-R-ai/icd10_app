@@ -73,12 +73,12 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": None
         }
 
-    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=70)
+    threshold = 50 if len(text_clean) <= 5 else 70
+    mapping_value, icd_code, confidence = map_input(text_clean, df, threshold=threshold)
     if mapping_value is not None:
-        return {
-            "Input": text,
-            "MappingFieldValue": mapping_value,
-            "ICD10 Code": icd_code
+        return {"Input": text, 
+        "MappingFieldValue": mapping_value, 
+        "ICD10 Code": icd_code
         }
 
     normalized = normalize_diagnosis_llm(text)
