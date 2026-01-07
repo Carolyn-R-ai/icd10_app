@@ -77,11 +77,11 @@ def predict_icd10_llm_assisted(text):
         for _, row in df.iterrows():
             codes = [c.strip().lower() for c in row['ICD10 Code'].split(',')]
             if text_clean in codes:
-            return {
-                "Input": text,
-                "MappingFieldValue": row['MappingFieldValue'],
-                "ICD10 Code": text_clean.upper()
-            }
+                return {
+                    "Input": text,
+                    "MappingFieldValue": row['MappingFieldValue'],
+                    "ICD10 Code": text_clean.upper()
+                       }
             
     normalized = normalize_diagnosis_llm(text)
     mapping_value, icd_code, confidence = map_input(normalized, df)
