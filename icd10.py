@@ -73,12 +73,22 @@ def predict_icd10_llm_assisted(text):
             "ICD10 Code": icd_code
         }
 
-    if re.match(r'^c\d{1,2}$', text_clean):
+
+    if re.match(r'^c\d{2}$', text_clean):
+        matches = df[df['ICD10 Code'].str.startswith(text_clean.upper())]
+    if not matches.empty:
         return {
             "Input": text,
-            "MappingFieldValue": None,
-            "ICD10 Code": None
+            "MappingFieldValue": list(matches['MappingFieldValue'].unique()),
+            "ICD10 Code": list(matches['ICD10 Code'].unique())
         }
+
+    return {
+        "Input": text,
+        "MappingFieldValue": None,
+        "ICD10 Code": None
+    }
+
 
     normalized = normalize_diagnosis_llm(text)
     mapping_value, icd_code, confidence = map_input(normalized, df)
