@@ -20,7 +20,7 @@ def normalize(text: str) -> str:
 
 @st.cache_data
 def load_data():
-    path = r"C:\Users\Hp\Downloads\icd10_with_diagnosis.xlsx"
+    path = "icd10_with_diagnosis.xlsx"
     df = pd.read_excel(path)
 
     required = ["ICD10_Code", "Diagnosis_Name", "WHO_Full_Desc", "ICD10_Block"]
@@ -182,4 +182,5 @@ if not df.empty:
             st.error("Not found")
 
 else:
+
     st.error("Dataset not loaded")
