@@ -12,7 +12,7 @@ st.set_page_config(
 
 st.title("🧬 ICD-10 Matcher")
 
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+genai.configure(api_key=s"GEMINI_API_KEY")
 
 def normalize(text: str) -> str:
     return re.sub(r"[^a-z0-9\s]", "", str(text).lower()).strip()
@@ -183,5 +183,6 @@ if not df.empty:
 else:
 
     st.error("Dataset not loaded")
+
 
 
