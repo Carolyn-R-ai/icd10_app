@@ -1,5 +1,6 @@
-re
-pandas
 streamlit
-google.generativeai
+pandas
 rapidfuzz
+google-generativeai
+openpyxl
+rich
